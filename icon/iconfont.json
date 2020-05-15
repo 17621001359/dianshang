@@ -1,0 +1,72 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "5706",
+      "name": "七天无理由退换货",
+      "font_class": "qitianwuliyoutuihuanhuo",
+      "unicode": "3467",
+      "unicode_decimal": 13415
+    },
+    {
+      "icon_id": "56998",
+      "name": "天猫-七天退货",
+      "font_class": "tianmaoqitiantuihuo",
+      "unicode": "f0079",
+      "unicode_decimal": 983161
+    },
+    {
+      "icon_id": "880429",
+      "name": "扳手",
+      "font_class": "editor2",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "1301354",
+      "name": "扳手",
+      "font_class": "banshou",
+      "unicode": "e659",
+      "unicode_decimal": 58969
+    },
+    {
+      "icon_id": "2570123",
+      "name": "位置",
+      "font_class": "weizhi",
+      "unicode": "e654",
+      "unicode_decimal": 58964
+    },
+    {
+      "icon_id": "6677532",
+      "name": "位置",
+      "font_class": "weizhi1",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "7090068",
+      "name": "退换货",
+      "font_class": "tuihuanhuo",
+      "unicode": "e715",
+      "unicode_decimal": 59157
+    },
+    {
+      "icon_id": "7287091",
+      "name": "退换货",
+      "font_class": "tuihuanhuo1",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "8361815",
+      "name": "礼盒",
+      "font_class": "lihe",
+      "unicode": "e6c9",
+      "unicode_decimal": 59081
+    }
+  ]
+}

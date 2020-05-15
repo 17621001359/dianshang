@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/zhuce.css">
+    <link rel="stylesheet" href="./iconfont/iconfont.css">
+</head>
+<body>
+ <div id="">
+    <div class="con-box">
+        <h2 class="con_l">
+            <img src="./images/conbox1_03.png" alt="">
+        </h2>
+        <span class="cls-1">注册小米账户</span>
+        <span class="cls-2">国家/地区</span>
+        <select name="" class="con-r"  id="province">
+			<option value="">北京</option>
+            <option value="">上海</option>
+            <option value="">广州</option>
+		</select>
+		<select id="city">
+            <option value="">朝阳</option>
+            <option value="">海淀</option>
+		</select>   
+		
+		
+        <span class="cls-3">成功注册账号后，国家/地区将不能被修改</span>
+        <span class="cls-4">手机号码</span>
+        <div class="con_c">
+            <select name="" id="" class="con_num">
+                <option value="+86">+86</option>
+            </select>
+            <input id="username" type="text" placeholder="请输入手机号码" class="con_btn" ><span id="showUser"></span><br/>
+			<input id="userpass"  type="password" placeholder="请输入密码必须是数字，6-16" class="mima_txt"  ><span id="showPass"></span><br/>
+			<div class="phone-box">
+				手机号码:<input id="phoneId" type="text"><input id="btnSend" type="button" value="发送短信"><br/>
+				短信验证码:<input id="phoneCode" type="text"><br/>
+			</div>
+			<div id="msg"></div>
+        </div>
+
+        <div id="messageBox">
+
+		</div>
+      
+          <div>
+            <input id="btnReg" type="button" class="con_5" value="立即注册">
+          </div>
+          
+          <p>已阅读并阅读：小米<b>用户协议</b>和<b>隐私政策</b></p>
+    </div>
+
+ </div>
+ <div class="footer-box">
+     <div>
+         <a href="#">简体</a>| 
+         <a href="#">繁体</a>|
+         <a href="#">English</a >|
+         <a href="#">常见问题</a>
+     </div>
+     <p>小米公司版权所有-京ICP备10046444-京公网安备11010802020134号-京ICP证110507号</p>
+ </div>
+</body>
+</html>
+
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+
+<script>
+	let datas = null;
+
+	function getData(){
+		$.getJSON("./json/myCity.json",function(data){
+			datas=data;
+			showProvince();
+			showCity($("#province").val());
+		});
+	}
+	function showProvince(){
+		let htmlStr="";
+		for(let key in datas){
+			htmlStr += `<option>${key}</option>`;
+		}
+		$("#province").html(htmlStr);
+	}
+	function showCity(province){
+		let arr=datas[province];
+		let htmlStr="";
+		arr.forEach(item => {
+			htmlStr += `<option value="">${item["市名"]}</option>`;
+		});
+		$("#city").html(htmlStr);
+	}
+
+
+
+
+
+
+
+
+
+
+	function sendCode(){
+    $.get("./sms/api_demo/SmsDemo.php",{
+        "phonenumber":$("#phoneId").val()
+    },function(data){
+        
+        data = JSON.parse(data);
+        if(data.Code=="OK"){ //说明发送成功
+            $("#msg").html("发送成功");
+        }else{
+            $("#msg").html("发送失败");
+        }        
+        setTimeout(function(){
+            $("#msg").html("");
+        },1000);
+    });
+}
+
+    function isTest(){
+	return isUserName()&&isPass();
+}
+
+function isUserName(){
+	//1)、非空判断
+	if($("#username").val()==""){
+		return false;
+	}
+	//2)、格式判断
+	// 用户名有数字，字母下划线组成，但不能以数字开头，2-10位
+	let reg = /^\d{11}$/;
+	if(!reg.test($("#username").val())){
+		return false;
+	}
+	return true;
+}
+    //2、密码的前端验证
+function isPass(){
+	//1)、非空判断
+	if($("#userpass").val()==""){
+		return false;
+	}
+	//2)、格式判断
+	// 数字，6-16位
+	let reg = /^\d{6,16}$/;
+	if(!reg.test($("#userpass").val())){
+		return false;
+	}
+	return true;
+}
+//二、后端验证
+let hasUser = false;//该用户名不存在
+function hasUserBack(){
+	//后端验证用户名是否存在
+	$.get("checkUser.php",{"username":$("#username").val()},function(data){
+		if(data=="0"){
+			$("#showUser").html("亲，该用户名已经存在，请重新思考！");
+			$("#showUser").css({"color":"red"});
+			hasUser = true;
+		}else{
+			$("#showUser").html("√");
+			$("#showUser").css({"color":"green"});
+			hasUser = false;
+		}
+	})
+}
+
+$(function(){	
+	getData();
+	$("#province").change(function(){
+        // 修改 $("#city")里的option
+        showCity(this.value);
+    }); 
+
+
+    $("#btnSend").click(function(){
+        sendCode();
+    });
+		$("#username").blur(function(){
+			//1、前端验证
+
+			if(isUserName()==false){
+				$("#showUser").html("亲，用户名的格式不正确！");
+				return;
+			}
+			//2、后端的验证
+			hasUserBack();
+		});	
+
+		$("#userpass").blur(function(){
+			//1、前端验证
+			if(isPass()==false){
+				$("#showPass").html("亲，密码格式不正确	！");
+				return;
+			}else{
+				$("#showPass").html("√");
+			}
+		});
+
+		$("#btnReg").click(function(){
+			if($("#username").val()==""){
+            alert("用户名不能为空");
+          
+            return false;
+		}   
+		if($("#userpass").val()==""){
+            alert("密码不能为空");
+          
+            return false;
+        }  
+			//1、前端验证
+			if(isTest()==false){
+				$("#messageBox").html("亲，您的信息输入不全");
+				return;
+			}
+			//2、用户名是否存在(后端验证)
+			if(hasUser){
+				return;
+			}		
+
+			$.post(
+				"addUser.php",
+				{
+					"username":$("#username").val(),
+					"userpass":$("#userpass").val(),
+					"phoneCode":$("#phoneCode").val()
+				},
+				function(data){
+					if(data=="success"){
+						$("#messageBox").css({"color":"green"});
+						$("#messageBox").html("恭喜您，注册成功！2秒后跳转到<a href='login.html'>登录</a>页面");
+						setTimeout(()=>{
+							location.href="login.html";
+						},2000);
+					}else if(data=="codefail"){
+            			$("#msg").html("短信验证码错误");
+        			}else if(data=="fail"){
+						$("#messageBox").css({"color":"red"});
+						$("#messageBox").html("不好意思，注册失败!");
+					}else{
+						$("#messageBox").css({"color":"red"});
+						$("#messageBox").html("不好意思，服务器出问题了!");
+					}
+				}
+			);
+		});
+	});
+
+
+</script>
